@@ -1,0 +1,168 @@
+import React, { useState, useCallback } from 'react';
+import Navbar from './components/Navbar';
+import Herosection from './components/Herosection';
+import Feature from './components/Feature';
+import InputSection from './components/Inputsection';
+import FileUploadSection from './components/FileUploadSection';
+import AnalysisSection from './components/AnalysisSection';
+import ResultSection from './components/ResultSection';
+import Footer from './components/Footer';
+import LearnSection from './components/LearnSection';
+import { detectNormalForm, normalizeTo, normalizeWithData } from './api/normService';
+import './App.css';
+
+function App() {
+  // --- STATE 1: Navigation ('home', 'tool', 'learn') ---
+  const [currentView, setCurrentView] = useState('home');
+
+  // --- STATE 2: Tool Logic (Schema & Data) ---
+  const [schema, setSchema] = useState({
+    tableName: "",
+    attributes: [],
+    primaryKey: [],
+    functionalDependencies: [],
+    multivaluedDependencies: [],
+    joinDependencies: []
+  });
+
+  const [file, setFile] = useState(null);
+  const [result, setResult] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  // --- HANDLERS ---
+  const handleSchemaUpdate = useCallback((newSchema) => {
+    setSchema(newSchema);
+    setResult(null); 
+  }, []);
+
+  const handleFileSelect = (uploadedFile) => {
+    setFile(uploadedFile);
+    setResult(null);
+  };
+
+  const hasDependencies = (s) => {
+    return (s.functionalDependencies && s.functionalDependencies.length > 0) || 
+           (s.multivaluedDependencies && s.multivaluedDependencies.length > 0) || 
+           (s.joinDependencies && s.joinDependencies.length > 0);
+  };
+
+  const handleAnalyze = async (schemaToAnalyze) => {
+    if (!schemaToAnalyze.attributes || schemaToAnalyze.attributes.length === 0) {
+      setError("Please provide attributes to analyze.");
+      return;
+    }
+    if (!hasDependencies(schemaToAnalyze)) {
+      setError("Please provide at least one dependency.");
+      return;
+    }
+
+    setLoading(true);
+    setError(null);
+    try {
+      const response = await detectNormalForm(schemaToAnalyze);
+      setResult(response);
+    } catch (err) {
+      console.error("Analysis failed:", err);
+      setError("Failed to fetch analysis.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleNormalize = async (schemaToNormalize, target) => {
+    if (!schemaToNormalize.attributes || schemaToNormalize.attributes.length === 0) {
+      setError("Please provide attributes to normalize.");
+      return;
+    }
+    if (!hasDependencies(schemaToNormalize)) {
+       setError("Please provide at least one dependency.");
+       return;
+    }
+
+    setLoading(true);
+    setError(null);
+    try {
+      let response;
+      if (file) {
+        response = await normalizeWithData(file, schemaToNormalize, target);
+        setResult({ type: 'DATA', tables: response, target: target });
+      } else {
+        response = await normalizeTo(schemaToNormalize, target);
+        setResult({ type: 'SCHEMA', ...response });
+      }
+    } catch (err) {
+      console.error("Normalization failed:", err);
+      setError("Failed to normalize.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // --- VIEW RENDERING ENGINE ---
+  const renderContent = () => {
+    switch(currentView) {
+      case 'home':
+        return (
+          <div className="animate-fade-in">
+            <Herosection 
+              onStart={() => setCurrentView('tool')} 
+              onLearn={() => setCurrentView('learn')} 
+            />
+            <Feature />
+            
+            {/* FOOTER IS NOW ONLY HERE */}
+            <Footer setCurrentView={setCurrentView} />
+          </div>
+        );
+      
+      case 'learn':
+        return (
+          <div className="animate-fade-in">
+            <LearnSection />
+          </div>
+        );
+      
+      case 'tool':
+        return (
+          <div className="animate-fade-in space-y-4 pb-12">
+            <InputSection onSchemaUpdate={handleSchemaUpdate} />
+            <FileUploadSection onFileSelect={handleFileSelect} />
+            <AnalysisSection
+              onDetect={handleAnalyze}
+              onNormalize={handleNormalize}
+              loading={loading}
+              schema={schema}
+            />
+            {error && (
+              <div className="container mx-auto px-4 mt-4">
+                <div className="p-4 bg-red-100 text-red-700 rounded-lg text-center border border-red-200">
+                  {error}
+                </div>
+              </div>
+            )}
+            <ResultSection result={result} />
+          </div>
+        );
+        
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 font-sans text-gray-900">
+      {/* Navigation Bar (Always Visible) */}
+      <Navbar currentView={currentView} setCurrentView={setCurrentView} />
+      
+      {/* Main Content Area */}
+      <main>
+        {renderContent()}
+      </main>
+      
+      {/* Global Footer REMOVED from here */}
+    </div>
+  );
+}
+
+export default App;
