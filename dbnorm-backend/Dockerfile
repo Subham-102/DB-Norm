@@ -4,8 +4,8 @@ WORKDIR /app
 COPY . .
 RUN mvn clean package -DskipTests
 
-# Step 2: Use a lightweight OpenJDK image to run the compiled application
-FROM openjdk:17-jdk-slim
+# Step 2: Use a verified Eclipse Temurin OpenJDK 17 image to run the app
+FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
