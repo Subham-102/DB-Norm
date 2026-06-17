@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://dbnorm-api.onrender.com", // backend base URL
+  baseURL: "https://dbnorm-api.onrender.com/api", // backend base URL
   headers: { "Content-Type": "application/json" }
 });
 
