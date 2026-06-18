@@ -1,1 +1,1 @@
-DB_NORM
+DB_NORM - An efficient database normaliser 
