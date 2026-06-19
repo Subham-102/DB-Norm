@@ -124,26 +124,27 @@ function App() {
         );
       
       case 'tool':
-        return (
-          <div className="animate-fade-in space-y-4 pb-12">
-            <InputSection onSchemaUpdate={handleSchemaUpdate} />
-            <FileUploadSection onFileSelect={handleFileSelect} />
-            <AnalysisSection
-              onDetect={handleAnalyze}
-              onNormalize={handleNormalize}
-              loading={loading}
-              schema={schema}
-            />
-            {error && (
-              <div className="container mx-auto px-4 mt-4">
-                <div className="p-4 bg-red-100 text-red-700 rounded-lg text-center border border-red-200">
-                  {error}
-                </div>
-              </div>
-            )}
-            <ResultSection result={result} />
+  return (
+    // Added w-full, max-w-7xl, mx-auto, and px-4 for adaptive edge spacing
+    <div className="animate-fade-in space-y-6 pb-12 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <InputSection onSchemaUpdate={handleSchemaUpdate} />
+      <FileUploadSection onFileSelect={handleFileSelect} />
+      <AnalysisSection
+        onDetect={handleAnalyze}
+        onNormalize={handleNormalize}
+        loading={loading}
+        schema={schema}
+      />
+      {error && (
+        <div className="w-full mt-4">
+          <div className="p-4 bg-red-100 text-red-700 rounded-lg text-center border border-red-200 text-sm sm:text-base">
+            {error}
           </div>
-        );
+        </div>
+      )}
+      <ResultSection result={result} />
+    </div>
+  );
         
       default:
         return null;

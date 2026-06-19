@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 
-// Single Export Card
+// Single Export Card Component
 function ExportCard({
   icon,
   bgColor,
@@ -16,28 +16,29 @@ function ExportCard({
     <motion.div
       initial={{ opacity: 0, y: 20, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
-      whileHover={{ scale: 1.05, boxShadow: "0px 15px 30px rgba(0,0,0,0.2)" }}
-      className="card-hover bg-white rounded-2xl p-6 text-center"
+      transition={{ duration: 0.5, delay: index * 0.1 }}
+      // Scaled down mobile hover to prevent accidental touch page overflows
+      whileHover={{ scale: 1.03, boxShadow: "0px 12px 24px rgba(0,0,0,0.15)" }}
+      className="bg-white rounded-2xl p-6 text-center border border-gray-100 shadow-sm flex flex-col justify-between h-full w-full"
     >
-      <div
-        className={`w-16 h-16 ${bgColor} rounded-full flex items-center justify-center mx-auto mb-4`}
-      >
-        <i className={`${icon} ${textColor} text-2xl`} />
+      <div>
+        <div className={`w-14 h-14 ${bgColor} rounded-full flex items-center justify-center mx-auto mb-4 flex-shrink-0`}>
+          <i className={`${icon} ${textColor} text-xl`} />
+        </div>
+        <h3 className="text-lg font-bold text-gray-800 mb-2">{title}</h3>
+        <p className="text-sm text-gray-600 mb-5 leading-relaxed">{description}</p>
       </div>
-      <h3 className="text-xl font-semibold text-gray-800 mb-3">{title}</h3>
-      <p className="text-gray-600 mb-4">{description}</p>
       <button
         onClick={onClick}
-        className="w-full py-3 rounded-xl bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors duration-300 flex items-center justify-center gap-2"
+        className="w-full py-3 rounded-xl bg-blue-600 text-white font-bold text-sm hover:bg-blue-700 transition-colors duration-300 flex items-center justify-center gap-2 outline-none"
       >
-        <i className="fas fa-download" /> {buttonText}
+        <i className="fas fa-download text-xs" /> {buttonText}
       </button>
     </motion.div>
   );
 }
 
-// Combined Result Section
+// Combined Results/Export Section
 export default function ResultSection({ onDownload }) {
   const originalData = [
     {
@@ -106,120 +107,130 @@ export default function ResultSection({ onDownload }) {
   ];
 
   return (
-    <div className="bg-gray-50 min-h-screen">
-      {/* Header */}
-      <header className="bg-gradient-to-r from-blue-600 to-purple-700 text-white shadow-lg">
-        <div className="container mx-auto px-4 py-6 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="bg-white p-2 rounded-lg">
-              <i className="fas fa-database text-blue-600 text-2xl"></i>
+    <div className="bg-gray-50 min-h-screen w-full overflow-hidden">
+      {/* Header (Updated to align elements neatly on touch screens) */}
+      <header className="bg-gradient-to-r from-blue-600 to-purple-700 text-white shadow-md">
+        <div className="container mx-auto px-4 py-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
+          <div className="flex flex-col sm:flex-row items-center gap-3">
+            <div className="bg-white p-2 rounded-xl flex-shrink-0">
+              <i className="fas fa-database text-blue-600 text-xl"></i>
             </div>
-            <h1 className="text-2xl md:text-3xl font-bold">Database Normalizer Results</h1>
+            <h1 className="text-xl sm:text-2xl font-extrabold tracking-tight">Database Normalizer Results</h1>
           </div>
-          <span className="text-blue-100 hidden md:block">Converted Tables Output</span>
+          <span className="text-xs sm:text-sm text-blue-100 font-semibold tracking-wide bg-white/10 px-3 py-1 rounded-full">
+            Converted Tables Output
+          </span>
         </div>
       </header>
 
       {/* Main Section */}
-      <main className="container mx-auto px-4 py-8">
-        {/* Result Header */}
-        <div className="bg-white rounded-xl shadow-md p-6 mb-8">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Normalization Complete</h2>
-          <div className="grid md:grid-cols-3 gap-4">
-            <div className="text-center p-4 bg-green-50 rounded-lg">
-              <i className="fas fa-check-circle text-green-500 text-2xl mb-2"></i>
-              <div className="text-sm font-semibold text-green-700">BCNF Achieved</div>
+      <main className="container mx-auto px-4 py-6 sm:py-8 w-full">
+        
+        {/* Results Metadata Summary Cards */}
+        <div className="bg-white rounded-2xl shadow-md p-4 sm:p-6 mb-6 sm:mb-8 border border-gray-100">
+          <h2 className="text-lg sm:text-2xl font-bold text-gray-800 mb-4 text-center sm:text-left">Normalization Complete</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
+            <div className="text-center p-3 sm:p-4 bg-green-50 rounded-xl border border-green-100">
+              <i className="fas fa-check-circle text-green-500 text-xl sm:text-2xl mb-1.5 sm:mb-2 block"></i>
+              <div className="text-xs sm:text-sm font-bold text-green-700">BCNF Achieved</div>
             </div>
-            <div className="text-center p-4 bg-blue-50 rounded-lg">
-              <i className="fas fa-table text-blue-500 text-2xl mb-2"></i>
-              <div className="text-sm font-semibold text-blue-700">3 Tables Created</div>
+            <div className="text-center p-3 sm:p-4 bg-blue-50 rounded-xl border border-blue-100">
+              <i className="fas fa-table text-blue-500 text-xl sm:text-2xl mb-1.5 sm:mb-2 block"></i>
+              <div className="text-xs sm:text-sm font-bold text-blue-700">3 Tables Created</div>
             </div>
-            <div className="text-center p-4 bg-purple-50 rounded-lg">
-              <i className="fas fa-link text-purple-500 text-2xl mb-2"></i>
-              <div className="text-sm font-semibold text-purple-700">2 Relationships</div>
+            <div className="text-center p-3 sm:p-4 bg-purple-50 rounded-xl border border-purple-100">
+              <i className="fas fa-link text-purple-500 text-xl sm:text-2xl mb-1.5 sm:mb-2 block"></i>
+              <div className="text-xs sm:text-sm font-bold text-purple-700">2 Relationships</div>
             </div>
           </div>
         </div>
 
-        {/* Original Table */}
-        <div className="bg-white rounded-xl shadow-md p-6 mb-8">
-          <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center">
-            <i className="fas fa-exclamation-triangle text-yellow-500 mr-2"></i>
-            Original Table (Before Normalization)
-            <span className="ml-2 px-3 py-1 bg-yellow-100 text-yellow-800 text-sm rounded-full">1NF - Contains Redundancy</span>
-          </h3>
-          <div className="overflow-x-auto">
-            <table className="w-full border-collapse border border-gray-300">
+        {/* Original Data Redundancy Evaluation Table Area */}
+        <div className="bg-white rounded-2xl shadow-md p-4 sm:p-6 mb-6 sm:mb-8 border border-gray-100">
+          
+          {/* Header Container (Updated from row to adaptive stack layout) */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-4 border-b border-gray-100 pb-3">
+            <h3 className="text-base sm:text-lg font-bold text-gray-800 flex items-center gap-1.5">
+              <i className="fas fa-exclamation-triangle text-yellow-500 text-sm"></i>
+              Original Source Matrix
+            </h3>
+            <span className="px-3 py-1 bg-yellow-50 border border-yellow-200 text-yellow-800 text-[11px] font-bold rounded-full w-fit">
+              1NF - High Structural Redundancy
+            </span>
+          </div>
+
+          {/* Matrix Loader Window Wrapper */}
+          <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-inner">
+            <table className="w-full border-collapse text-left text-xs sm:text-sm min-w-[800px] sm:min-w-0">
               <thead>
-                <tr className="bg-gray-100">
-                  <th className="border px-4 py-2 primary-key">EmployeeID</th>
-                  <th className="border px-4 py-2">FirstName</th>
-                  <th className="border px-4 py-2">LastName</th>
-                  <th className="border px-4 py-2">Email</th>
-                  <th className="border px-4 py-2">DepartmentID</th>
-                  <th className="border px-4 py-2">DepartmentName</th>
-                  <th className="border px-4 py-2">ManagerID</th>
-                  <th className="border px-4 py-2">ManagerName</th>
-                  <th className="border px-4 py-2">Salary</th>
+                <tr className="bg-gray-100 text-gray-700 uppercase text-[10px] sm:text-xs font-bold tracking-wider">
+                  <th className="border-b border-gray-200 px-3 sm:px-4 py-2.5 text-blue-700">EmployeeID</th>
+                  <th className="border-b border-gray-200 px-3 sm:px-4 py-2.5">FirstName</th>
+                  <th className="border-b border-gray-200 px-3 sm:px-4 py-2.5">LastName</th>
+                  <th className="border-b border-gray-200 px-3 sm:px-4 py-2.5">Email</th>
+                  <th className="border-b border-gray-200 px-3 sm:px-4 py-2.5">DepartmentID</th>
+                  <th className="border-b border-gray-200 px-3 sm:px-4 py-2.5">DepartmentName</th>
+                  <th className="border-b border-gray-200 px-3 sm:px-4 py-2.5">ManagerID</th>
+                  <th className="border-b border-gray-200 px-3 sm:px-4 py-2.5">ManagerName</th>
+                  <th className="border-b border-gray-200 px-3 sm:px-4 py-2.5">Salary</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="text-gray-600 font-normal">
                 {originalData.map((row, i) => (
-                  <tr key={row.id} className={i % 2 === 1 ? "bg-gray-50" : ""}>
-                    <td className="border px-4 py-2 primary-key">{row.id}</td>
-                    <td className="border px-4 py-2">{row.first}</td>
-                    <td className="border px-4 py-2">{row.last}</td>
-                    <td className="border px-4 py-2">{row.email}</td>
-                    <td className="border px-4 py-2">{row.depId}</td>
-                    <td className="border px-4 py-2">{row.depName}</td>
-                    <td className="border px-4 py-2">{row.mgrId}</td>
-                    <td className="border px-4 py-2">{row.mgrName}</td>
-                    <td className="border px-4 py-2">{row.salary}</td>
+                  <tr key={row.id} className={`hover:bg-gray-50/80 transition-colors ${i % 2 === 1 ? "bg-gray-50/40" : "bg-white"}`}>
+                    <td className="border-b border-gray-100 px-3 sm:px-4 py-2.5 font-mono font-bold text-blue-600">{row.id}</td>
+                    <td className="border-b border-gray-100 px-3 sm:px-4 py-2.5">{row.first}</td>
+                    <td className="border-b border-gray-100 px-3 sm:px-4 py-2.5">{row.last}</td>
+                    <td className="border-b border-gray-100 px-3 sm:px-4 py-2.5 font-mono">{row.email}</td>
+                    <td className="border-b border-gray-100 px-3 sm:px-4 py-2.5 font-mono">{row.depId}</td>
+                    <td className="border-b border-gray-100 px-3 sm:px-4 py-2.5">{row.depName}</td>
+                    <td className="border-b border-gray-100 px-3 sm:px-4 py-2.5 font-mono">{row.mgrId}</td>
+                    <td className="border-b border-gray-100 px-3 sm:px-4 py-2.5">{row.mgrName}</td>
+                    <td className="border-b border-gray-100 px-3 sm:px-4 py-2.5 font-mono">{row.salary.toLocaleString()}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
-          <div className="mt-4 bg-red-50 p-4 rounded-lg">
-            <h4 className="font-semibold text-red-800 mb-2">Issues Detected:</h4>
-            <ul className="text-sm text-red-600 space-y-1">
-              <li>• DepartmentName repeated for each employee in same department</li>
-              <li>• ManagerName repeated for employees with same manager</li>
-              <li>• Data redundancy causing update anomalies</li>
+          
+          {/* Anomaly Reports Panel */}
+          <div className="mt-4 bg-red-50/60 p-4 rounded-xl border border-red-100">
+            <h4 className="font-bold text-red-800 text-xs sm:text-sm mb-1.5 uppercase tracking-wide">Anomaly Profile Detected:</h4>
+            <ul className="text-xs sm:text-sm text-red-700 space-y-1.5 pl-0.5">
+              <li className="flex items-start gap-1.5"><span className="text-red-400 mt-0.5">&bull;</span> <span>DepartmentName repeated redundant data fields for each record.</span></li>
+              <li className="flex items-start gap-1.5"><span className="text-red-400 mt-0.5">&bull;</span> <span>ManagerName duplication triggers update/deletion data vulnerability.</span></li>
             </ul>
           </div>
         </div>
 
-        {/* Export Section */}
-        <section className="py-16 bg-gradient-to-br from-blue-50 to-purple-50">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-800 mb-4">Export Your Schema</h2>
-              <p className="text-gray-600">Multiple formats for easy integration with your development workflow</p>
-            </div>
-            <div className="grid md:grid-cols-3 gap-6">
-              {exportOptions.map((opt, index) => (
-                <ExportCard
-                  key={opt.key}
-                  icon={opt.icon}
-                  bgColor={opt.bgColor}
-                  textColor={opt.textColor}
-                  title={opt.title}
-                  description={opt.description}
-                  buttonText={opt.buttonText}
-                  onClick={() => onDownload(opt.key)}
-                  index={index}
-                />
-              ))}
-            </div>
+        {/* Export Integration Layout Section */}
+        <section className="py-8 sm:py-12 bg-gradient-to-br from-blue-50/50 to-purple-50/50 rounded-2xl border border-gray-200/40 w-full px-2 sm:px-4">
+          <div className="text-center mb-8 sm:mb-10">
+            <h2 className="text-xl sm:text-2xl font-extrabold text-gray-800 mb-2">Export Your Schema</h2>
+            <p className="text-xs sm:text-sm text-gray-600 px-2">Multiple production schema formats optimized for developer workflows</p>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 w-full">
+            {exportOptions.map((opt, index) => (
+              <ExportCard
+                key={opt.key}
+                icon={opt.icon}
+                bgColor={opt.bgColor}
+                textColor={opt.textColor}
+                title={opt.title}
+                description={opt.description}
+                buttonText={opt.buttonText}
+                onClick={() => onDownload(opt.key)}
+                index={index}
+              />
+            ))}
           </div>
         </section>
       </main>
 
       {/* Footer */}
-      <footer className="bg-gray-800 text-white py-8 mt-12 text-center">
-        <p>© 2024 Database Normalizer - Result Tables Output</p>
-        <p className="text-gray-400 text-sm mt-2">Showing converted normalized database tables with relationships</p>
+      <footer className="bg-gray-800 text-slate-300 py-6 mt-12 text-center text-xs px-4">
+        <p className="font-medium">&copy; {new Date().getFullYear()} Database Normalizer - Result Tables Output</p>
+        <p className="text-gray-400 mt-1 font-normal">Showing converted normalized database tables with relationships</p>
       </footer>
     </div>
   );

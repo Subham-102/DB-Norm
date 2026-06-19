@@ -43,21 +43,22 @@ export default function FileUploadSection({ onFileSelect }) {
   };
 
   return (
-    <section className="py-8 bg-gray-50 border-t border-gray-200">
+    <section className="py-6 sm:py-8 bg-gray-50 border-t border-gray-200 w-full overflow-hidden">
       <div className="container mx-auto px-4">
-        <h3 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+        <h3 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6 text-center">
           Upload Table Data (Optional)
         </h3>
 
         {/* File Input Area */}
-        <div className="max-w-xl mx-auto mb-8">
-          <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-blue-300 rounded-xl cursor-pointer bg-blue-50 hover:bg-blue-100 transition">
-            <div className="flex flex-col items-center justify-center pt-5 pb-6">
-              <i className="fas fa-cloud-upload-alt text-3xl text-blue-500 mb-2"></i>
-              <p className="mb-2 text-sm text-gray-500">
-                <span className="font-semibold">Click to upload CSV</span> or drag and drop
+        <div className="max-w-xl mx-auto mb-6 sm:mb-8">
+          <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-blue-300 rounded-xl cursor-pointer bg-blue-50 hover:bg-blue-100 transition px-4">
+            <div className="flex flex-col items-center justify-center pt-5 pb-6 text-center">
+              <i className="fas fa-cloud-upload-alt text-2xl sm:text-3xl text-blue-500 mb-2"></i>
+              <p className="mb-1 text-xs sm:text-sm text-gray-500">
+                <span className="font-semibold text-blue-600 hover:text-blue-700">Click to upload CSV</span> 
+                <span className="hidden sm:inline"> or drag and drop</span>
               </p>
-              <p className="text-xs text-gray-400">CSV files only</p>
+              <p className="text-[11px] sm:text-xs text-gray-400">CSV files only</p>
             </div>
             <input 
               type="file" 
@@ -67,34 +68,34 @@ export default function FileUploadSection({ onFileSelect }) {
             />
           </label>
           {fileName && (
-            <p className="text-center mt-2 text-green-600 font-medium">
-              Selected: {fileName}
+            <p className="text-center mt-3 text-xs sm:text-sm text-green-600 font-medium break-all px-2">
+              <i className="fas fa-file-csv mr-1.5 text-base"></i>Selected: {fileName}
             </p>
           )}
         </div>
 
-        {/* Data Preview Table */}
+        {/* Data Preview Table (Optimized Row Spacing for Mobile Devices) */}
         {previewData.length > 0 && (
-          <div className="max-w-4xl mx-auto overflow-x-auto shadow-md rounded-lg">
-            <table className="w-full text-sm text-left text-gray-500">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-200">
+          <div className="max-w-4xl mx-auto overflow-x-auto shadow-md rounded-xl border border-gray-200">
+            <table className="w-full text-xs sm:text-sm text-left text-gray-500 min-w-[500px] sm:min-w-0">
+              <thead className="text-[11px] sm:text-xs text-gray-700 uppercase bg-gray-200 sticky top-0">
                 <tr>
                   {headers.map((h, i) => (
-                    <th key={i} className="px-6 py-3">{h}</th>
+                    <th key={i} className="px-3 sm:px-6 py-2.5 sm:py-3 font-semibold tracking-wider">{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {previewData.map((row, i) => (
-                  <tr key={i} className="bg-white border-b hover:bg-gray-50">
+                  <tr key={i} className="bg-white border-b hover:bg-gray-50 transition-colors">
                     {headers.map((h, j) => (
-                      <td key={j} className="px-6 py-4">{row[h]}</td>
+                      <td key={j} className="px-3 sm:px-6 py-2 sm:py-4 font-normal text-gray-600 break-words">{row[h]}</td>
                     ))}
                   </tr>
                 ))}
               </tbody>
             </table>
-            <p className="text-center text-xs text-gray-400 mt-2">
+            <p className="text-center text-[10px] sm:text-xs text-gray-400 py-2 bg-gray-50 border-t border-gray-100">
               (Preview showing first 5 rows)
             </p>
           </div>
